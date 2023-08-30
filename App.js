@@ -36,8 +36,6 @@ Notifications.setNotificationHandler({
 
 SplashScreen.preventAutoHideAsync();
 
-//This is my "Mad Minute Multiplication" App, designed to be quiz game that is fun but also educational. The game features three modes: easy (0x0 to 12x12), medium (0x0 to 100x12), hard (0x0 to 100x100), and custom (the user chooses the upper and lower bounds of both numbers). For the custom game mode, the user will be alerted on Web or given a toast notification on iOS and Android if their lower bound for a certain number is bigger than the upper bound for that same number. This app is best enjoyed with the ringer on the mobile devices turned off, as it features lots of cool sound effects that act as auditory feedback for the user for a correct or incorrect answer. I am once again importing animated, which is used for the countdown at the beginning and the incorrect answer. NOTE: I acknowledge that my 'readysetgo' countdown function is EXTREMELY repetitive. However, I could not figure out how to make it more concise with the given time constraints. My app also has AsyncStorage, which is used to save the high score a user achieves for their game even after they exit the app. I was thinking of creating an array with a separate high score for each game mode, but this would be difficult with the given time constraints. I also imported a custom font called Chalkboy, to give the app a moe User-Friendly look. Each gamemode has a one-minute countdown timer, and the user can earn streaks for getting multiple questions correct in succession. The higher the streak, the higher the multiplier, which increases the score earned (the user earns 10 *  the multiplier value for each correct question). For once, my app works on Android with no issues apart from minor scaling differences which do not in any way limit the functionality of the app. I am also using the fontshrinking feature from my Calculator App to change the font size if the user's score is too large. Overall, I am very proud of what I have achieved with this app and while I may not have experimented as much with new components as I did with previous projects, I think it is a combination of the best aspects of all my works. I also do think shadows behind the text would have greatly improved the aesthetics of the app, but unfortunately shadowProps are not supported on Android and I was not willing to break my app on Android again. I also have a Practice Mode within Custom where the timer does not run and the user can practice problems infinitely.
-
 export default function App() {
   let shuffle;
   let generateRandom;
@@ -47,7 +45,7 @@ export default function App() {
   const [isPlaying, setIsPlaying] = React.useState(true);
   const [sound, setSound] = React.useState();
   const [screen, setScreen] = useState(0);
-  const [isSubmit, setisSubmit] = useState('SUBMIT');
+  const [isSubmit, setisSubmit] = useState('Submit');
   const [num1, setNum1] = useState();
   const [num2, setNum2] = useState();
   const [count, setCount] = useState('3');
@@ -117,7 +115,6 @@ export default function App() {
 
   const readysetgo = async () => {
     setCount('3');
-    await playSound('count1');
     Animated.timing(textanimation, {
       toValue: 1,
       duration: 500,
@@ -126,7 +123,6 @@ export default function App() {
         toValue: 0,
         duration: 500,
       }).start(() => {
-        playSound('count1');
         setCount('2');
         Animated.timing(textanimation, {
           toValue: 1,
@@ -136,7 +132,6 @@ export default function App() {
             toValue: 0,
             duration: 500,
           }).start(() => {
-            playSound('count1');
             setCount('1');
             Animated.timing(textanimation, {
               toValue: 1,
@@ -146,7 +141,6 @@ export default function App() {
                 toValue: 0,
                 duration: 500,
               }).start(async () => {
-                playSound('count2');
                 setCount('Go!');
                 Animated.timing(textanimation, {
                   toValue: 1,
@@ -199,20 +193,6 @@ export default function App() {
     if (s == 'crowd') {
       const { sound } = await Audio.Sound.createAsync(
         require('./assets/crowdcheering.mp3')
-      );
-      setSound(sound);
-      await sound.playAsync();
-    }
-    if (s == 'count1') {
-      const { sound } = await Audio.Sound.createAsync(
-        require('./assets/count1.mp3')
-      );
-      setSound(sound);
-      await sound.playAsync();
-    }
-    if (s == 'count2') {
-      const { sound } = await Audio.Sound.createAsync(
-        require('./assets/count2.mp3')
       );
       setSound(sound);
       await sound.playAsync();
@@ -356,13 +336,12 @@ export default function App() {
     }
     return {
       fontSize: myFontSize,
-      marginVertical: windowHeight * 0.01,
       alignSelf: 'center',
       color: '#f6f7fb',
-      fontFamily: 'Chalkboy',
+      fontFamily: 'madetommy',
       textAlign: 'center',
       justifyContent: 'flex-start',
-      textShadowColor: '#f66747',
+      textShadowColor: '#323854',
       textShadowRadius: 0,
       textShadowOffset: { width: 2, height: 2 },
     };
@@ -377,13 +356,14 @@ export default function App() {
     return {
       justifyContent: 'center',
       opacity: myOpacity,
+      alignSelf: 'flex-end'
     };
   };
 
   const styles = StyleSheet.create({
     container: {
       justifyContent: 'center',
-      backgroundColor: '#191919',
+      backgroundColor: '#0c0a2b',
       textAlign: 'center',
       textAlignVertical: 'center',
       flex: 1,
@@ -399,7 +379,7 @@ export default function App() {
       color: '#fbf3f2',
       justifyContent: 'center',
       alignItems: 'center',
-      fontFamily: 'Chalkboy',
+      fontFamily: 'madetommy',
     },
     input: {
       borderWidth: 1,
@@ -407,9 +387,9 @@ export default function App() {
       justifyContent: 'center',
       textAlign: 'center',
       alignItems: 'center',
-      fontFamily: 'Chalkboy',
+      fontFamily: 'madetommy',
       fontWeight: 'normal',
-      fontSize: 30,
+      fontSize: 15,
       width: '60%',
     },
     titleContainer: {
@@ -434,46 +414,63 @@ export default function App() {
       justifyContent: 'center',
       marginVertical: '5%',
     },
+
+    viewPad: {
+      width: windowWidth * 0.9,
+      backgroundColor: '#323854',
+      alignSelf: 'center',
+      height: windowHeight * 0.3,
+      borderRadius: 15,
+
+    },
+
+    scrollStyle: {
+      alignItems: 'center',
+      justifyContent: 'flex-start',
+      paddingTop: windowHeight * 0.01
+    }
   });
 
-  const [fontsLoaded] = useFonts({
-    //Loading a Custom Font
-    Chalkboy: require('./assets/ChalkboyRegular.otf'),
+  const [fontsLoaded] = useFonts({ // Importing Custom Fonts
+    'madetommy': require('./assets/madetommy.otf'),
   });
 
-  const onLayoutRootView = useCallback(async () => {
-    //Function that calls on Custom Font
-    if (fontsLoaded) {
+  const [fontsLoaded2] = useFonts({
+    'title': require('./assets/MotionPersonalUse.ttf')
+  })
+
+  const onLayoutRootView = React.useCallback(async () => { //Function that calls on Custom Font
+    if (fontsLoaded && fontsLoaded2) {
       await SplashScreen.hideAsync();
     }
-  }, [fontsLoaded]);
+  }, [fontsLoaded, fontsLoaded2]);
 
-  if (!fontsLoaded) {
+  if (!fontsLoaded && !fontsLoaded2) {
     return null;
   }
 
   if (screen == 0) {
     return (
       <SafeAreaView
-        style={[styles.container, { justifyContent: 'center' }]}
+        style={[styles.container, { justifyContent: 'space-between' }]}
         onLayout={onLayoutRootView}>
         <Text
           style={[
             styles.paragraph,
             {
-              fontFamily: 'Chalkboy',
-              color: '#f66747',
-              fontSize: 55,
+              fontFamily: 'title',
+              color: '#f6f7fb',
+              fontSize: 70,
               fontWeight: 'normal',
-              marginTop: '10%',
+              marginTop: '20%',
               textShadowColor: '#000',
               textShadowRadius: 0,
               textShadowOffset: { width: 2, height: 2 },
             },
           ]}>
-          Mad Minute Multiplication
+          MAD MINUTE MULTIPLY
         </Text>
-        <View style={{ marginBottom: '30%' }}>
+        <View style={{ marginBottom: '50%', height: '40%', justifyContent: 'space-between' }}>
           <TouchableOpacity
             onPress={() => {
               setScreen(4);
@@ -488,14 +485,13 @@ export default function App() {
                 styles.paragraph,
                 {
                   color: '#f6f7fb',
-                  fontSize: 60,
+                  fontSize: 35,
                   marginVertical: '1%',
                   textShadowColor: '#f66747',
                   textShadowRadius: 0,
-                  textShadowOffset: { width: 2, height: 2 },
                 },
               ]}>
-              Easy
+              Normal
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -512,14 +508,13 @@ export default function App() {
                 styles.paragraph,
                 {
                   color: '#f6f7fb',
-                  fontSize: 60,
+                  fontSize: 35,
                   marginVertical: '1%',
                   textShadowColor: '#f66747',
                   textShadowRadius: 0,
-                  textShadowOffset: { width: 2, height: 2 },
                 },
               ]}>
-              Normal
+              Hard
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -535,34 +530,24 @@ export default function App() {
                 styles.paragraph,
                 {
                   color: '#f6f7fb',
-                  fontSize: 60,
+                  fontSize: 35,
                   marginVertical: '1%',
                   textShadowColor: '#f66747',
                   textShadowRadius: 0,
-                  textShadowOffset: { width: 2, height: 2 },
                 },
               ]}>
-              Hard
+              Impossible
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
               setScreen((screen) => 3);
             }}>
-            <Text
-              style={[
-                styles.paragraph,
-                {
-                  color: '#f6f7fb',
-                  fontSize: 60,
-                  marginVertical: '1%',
-                  textShadowColor: '#f66747',
-                  textShadowRadius: 0,
-                  textShadowOffset: { width: 2, height: 2 },
-                },
-              ]}>
+            <View style={{borderRadius: 10, backgroundColor: '#dcbf54', marginBottoms: '10%', width: '45%', alignSelf: 'center'}}>
+              <Text style={[styles.paragraph, {textAlign: 'center', paddingHorizontal: 30, paddingVertical: 10, color: '#0c0a2b', fontSize: 25}]} numberOfLines={1}>
               Custom
-            </Text>
+              </Text>
+            </View>
           </TouchableOpacity>
         </View>
       </SafeAreaView>
@@ -572,7 +557,7 @@ export default function App() {
   if (screen == 1) {
     return (
       <SafeAreaView
-        style={[styles.container, { justifyContent: 'space-around' }]}
+        style={[styles.container, { justifyContent: 'center' }]}
         onLayout={onLayoutRootView}>
         <TouchableOpacity
           onPress={() => {
@@ -584,27 +569,29 @@ export default function App() {
             setIsRunning(true);
           }}>
           <Text
-            style={[styles.back, { fontFamily: 'Chalkboy', color: '#f6f7fb' }]}>
-            BACK
+            style={[styles.back, { fontFamily: 'madetommy', color: '#f6f7fb' }]}>
+            Back
           </Text>
         </TouchableOpacity>
-        <ScrollView keyboardShouldPersistTaps={'handled'}>
-          <View>
-            <Text style={this.changeStyle()} numberOfLines={1}>
-              {score}pts
-            </Text>
+          <Text style={this.changeStyle()} numberOfLines={1}>
+            {score}pts
+          </Text>
+        <ScrollView keyboardShouldPersistTaps={'handled'} style={styles.scrollStyle}>
+            <View style={styles.viewPad}>
             <View
               style={{
                 flexDirection: 'row',
                 alignItems: 'flex-end',
                 justifyContent: 'space-around',
                 marginHorizontal: '5%',
+                height: windowHeight * 0.06,
               }}>
               <Text
                 style={{
-                  fontSize: 30,
+                  fontSize: 20,
                   color: '#f6f7fb',
-                  fontFamily: 'Chalkboy',
+                  fontFamily: 'madetommy',
+                  marginBottom: windowHeight * 0.005
                 }}>
                 🔥{streak}
               </Text>
@@ -630,28 +617,29 @@ export default function App() {
                 }}
                 digitTxtStyle={{
                   color: '#f6f7fb',
-                  fontFamily: 'Chalkboy',
+                  fontFamily: 'madetommy',
                   fontWeight: 'normal',
-                  fontSize: 30,
+                  fontSize: 20,
                   justifyContent: 'center',
                   marginTop: '43%',
                 }}
                 timeLabelStyle={{ color: 'red' }}
-                separatorStyle={{ color: '#f66747', marginTop: '200%' }}
+                separatorStyle={{ color: '#fff', marginTop: '200%' }}
                 timeToShow={['M', 'S']}
                 timeLabels={{ m: null, s: null }}
                 showSeparator
               />
               <Text
                 style={{
-                  fontSize: 30,
-                  fontFamily: 'Chalkboy',
+                  fontSize: 20,
+                  fontFamily: 'madetommy',
                   color: '#f6f7fb',
+                  marginBottom: windowHeight * 0.005
                 }}>
                 {multiplier}x pts
               </Text>
             </View>
-          </View>
+
           <View
             style={{
               justifyContent: 'flex-end',
@@ -661,23 +649,26 @@ export default function App() {
             <Animated.Text
               style={[
                 styles.paragraph,
-                { fontSize: 100, color: color, marginLeft: '5%' },
+                { fontSize: 75, color: color, marginLeft: '5%' },
               ]}>
               {num1}
             </Animated.Text>
             <Animated.Text
               style={[
                 styles.paragraph,
-                { fontSize: 100, color: color, marginLeft: '5%' },
+                { fontSize: 75, color: color, marginLeft: '5%' },
               ]}>
               x {num2}
             </Animated.Text>
+          </View>
           </View>
           <View
             style={{
               flexDirection: 'row',
               justifyContent: 'space-around',
               alignItems: 'center',
+              width: windowWidth * 0.9,
+              marginTop: '5%'
             }}>
             <TextInput
               onKeyPress={(event) => {
@@ -688,13 +679,13 @@ export default function App() {
               style={styles.input}
               onChangeText={(text) => onChanged(text)}
               value={number}
-              placeholder="TYPE THE ANSWER"
+              placeholder="Type the Answer"
               keyboardType="number-pad"
               autoFocus={true}
             />
             <TouchableOpacity
               onPress={() => {
-                if (isSubmit == 'SUBMIT') {
+                if (isSubmit == 'Submit') {
                   {
                     handleSubmit();
                   }
@@ -704,7 +695,7 @@ export default function App() {
                 style={[
                   styles.paragraph,
                   {
-                    fontSize: 40,
+                    fontSize: 15,
                     marginVertical: '3%',
                     marginRight: '5%',
                     width: '100%',
@@ -728,19 +719,19 @@ export default function App() {
             style={[
               styles.paragraph,
               {
-                fontFamily: 'Chalkboy',
-                fontSize: 70,
+                fontFamily: 'madetommy',
+                fontSize: 50,
                 fontWeight: 'normal',
                 marginVertical: '10%',
               },
             ]}>
-            SCORE
+            Score
           </Text>
           <Text
             style={[
               styles.paragraph,
               {
-                fontFamily: 'Chalkboy',
+                fontFamily: 'madetommy',
                 fontSize: 70,
                 fontWeight: 'normal',
                 color: '#f6f7fb',
@@ -754,19 +745,19 @@ export default function App() {
             style={[
               styles.paragraph,
               {
-                fontFamily: 'Chalkboy',
-                fontSize: 70,
+                fontFamily: 'madetommy',
+                fontSize: 50,
                 fontWeight: 'normal',
                 marginVertical: '10%',
               },
             ]}>
-            HIGH SCORE
+            High Score
           </Text>
           <Text
             style={[
               styles.paragraph,
               {
-                fontFamily: 'Chalkboy',
+                fontFamily: 'madetommy',
                 fontSize: 70,
                 fontWeight: 'normal',
                 color: '#f6f7fb',
@@ -785,19 +776,11 @@ export default function App() {
             setStreak(0);
             setIsRunning(true);
           }}>
-          <Text
-            style={[
-              styles.paragraph,
-              {
-                fontSize: 55,
-                marginVertical: '10%',
-                borderWidth: 2,
-                borderColor: '#f66747',
-                alignSelf: 'center',
-              },
-            ]}>
-            MAIN MENU
-          </Text>
+            <View style={{borderRadius: 10, backgroundColor: '#dcbf54', marginBottom: '10%', width: '60%', alignSelf: 'center'}}>
+              <Text style={[styles.paragraph, {textAlign: 'center', paddingHorizontal: 30, paddingVertical: 10, color: '#0c0a2b', fontSize: 25}]} numberOfLines={1}>
+              Main Menu
+              </Text>
+            </View>
         </TouchableOpacity>
       </SafeAreaView>
     );
@@ -811,8 +794,8 @@ export default function App() {
             setScreen((screen) => 0);
           }}>
           <Text
-            style={[styles.back, { fontFamily: 'Chalkboy', color: '#f6f7fb' }]}>
-            BACK
+            style={[styles.back, { fontFamily: 'madetommy', color: '#f6f7fb' }]}>
+            Back
           </Text>
         </TouchableOpacity>
         <ScrollView>
@@ -820,14 +803,14 @@ export default function App() {
             style={[
               styles.paragraph,
               {
-                fontFamily: 'Chalkboy',
-                fontSize: 40,
+                fontFamily: 'madetommy',
+                fontSize: 30,
                 textAlignVertical: 'center',
                 fontWeight: 'normal',
                 marginHorizontal: '1%',
               },
             ]}>
-            TOP NUMBER MINIMUM VALUE
+            Top Number Minimum Value
           </Text>
           <Text style={[styles.paragraph, { color: '#f6f7fb' }]}>
             {customLmin}
@@ -839,20 +822,20 @@ export default function App() {
             minimumValue={0}
             step={1}
             onValueChange={(w) => setCustomLmin(w)}
-            minimumTrackTintColor="#f66747"
+            minimumTrackTintColor="#dcbf54"
             maximumTrackTintColor="#f6f7fb"
           />
           <Text
             style={[
               styles.paragraph,
               {
-                fontFamily: 'Chalkboy',
-                fontSize: 40,
+                fontFamily: 'madetommy',
+                fontSize: 30,
                 textAlignVertical: 'center',
                 fontWeight: 'normal',
               },
             ]}>
-            TOP NUMBER MAXIMUM VALUE
+            Top Number Maximum Value
           </Text>
           <Text style={[styles.paragraph, { color: '#f6f7fb' }]}>
             {customLmax}
@@ -864,20 +847,20 @@ export default function App() {
             minimumValue={0}
             step={1}
             onValueChange={(w) => setCustomLmax(w)}
-            minimumTrackTintColor="#f66747"
+            minimumTrackTintColor="#dcbf54"
             maximumTrackTintColor="#f6f7fb"
           />
           <Text
             style={[
               styles.paragraph,
               {
-                fontFamily: 'Chalkboy',
-                fontSize: 40,
+                fontFamily: 'madetommy',
+                fontSize: 30,
                 textAlignVertical: 'center',
                 fontWeight: 'normal',
               },
             ]}>
-            BOTTOM NUMBER MINIMUM VALUE
+            Bottom Number Minimum Value
           </Text>
           <Text style={[styles.paragraph, { color: '#f6f7fb' }]}>
             {customRmin}
@@ -889,20 +872,20 @@ export default function App() {
             minimumValue={0}
             step={1}
             onValueChange={(w) => setCustomRmin(w)}
-            minimumTrackTintColor="#f66747"
+            minimumTrackTintColor="#dcbf54"
             maximumTrackTintColor="#f6f7fb"
           />
           <Text
             style={[
               styles.paragraph,
               {
-                fontFamily: 'Chalkboy',
-                fontSize: 40,
+                fontFamily: 'madetommy',
+                fontSize: 30,
                 textAlignVertical: 'center',
                 fontWeight: 'normal',
               },
             ]}>
-            BOTTOM NUMBER MAXIMUM VALUE
+            Bottom Number Maximum Value
           </Text>
           <Text style={[styles.paragraph, { color: '#f6f7fb' }]}>
             {customRmax}
@@ -914,7 +897,7 @@ export default function App() {
             minimumValue={0}
             step={1}
             onValueChange={(w) => setCustomRmax(w)}
-            minimumTrackTintColor="#f66747"
+            minimumTrackTintColor="#dcbf54"
             maximumTrackTintColor="#f6f7fb"
           />
 
@@ -922,16 +905,16 @@ export default function App() {
             style={[
               styles.paragraph,
               {
-                fontFamily: 'Chalkboy',
-                fontSize: 40,
+                fontFamily: 'madetommy',
+                fontSize: 30,
                 textAlignVertical: 'center',
                 fontWeight: 'normal',
               },
             ]}>
-            TIME LIMIT
+            Time Limit
           </Text>
           <Text style={[styles.paragraph, { color: '#f6f7fb' }]}>
-            {roundLength / 60} Minutes
+            {roundLength / 60} {roundLength / 60 == 1 ? "minute" : "minutes"}
           </Text>
           <Slider
             style={styles.titleContainer}
@@ -940,24 +923,24 @@ export default function App() {
             minimumValue={30}
             step={30}
             onValueChange={(w) => setRoundLength(w)}
-            minimumTrackTintColor="#f66747"
+            minimumTrackTintColor="#dcbf54"
             maximumTrackTintColor="#f6f7fb"
           />
           <Text
             style={[
               styles.paragraph,
               {
-                fontFamily: 'Chalkboy',
-                fontSize: 40,
+                fontFamily: 'madetommy',
+                fontSize: 30,
                 textAlignVertical: 'center',
                 fontWeight: 'normal',
               },
             ]}>
-            PRACTICE MODE?
+            Practice Mode
           </Text>
           <Switch
             style={styles.daswitch}
-            trackColor={{ false: '#767577', true: '#f66747' }}
+            trackColor={{ false: '#767577', true: '#dcbf54' }}
             thumbColor={isEnabled ? '#f4f3f4' : '#f4f3f4'}
             ios_backgroundColor="#3e3e3e"
             onValueChange={toggleSwitch}
@@ -979,20 +962,11 @@ export default function App() {
                 }
               }
             }}>
-            <Text
-              style={[
-                styles.paragraph,
-                {
-                  fontSize: 55,
-                  marginVertical: '5%',
-                  borderWidth: 2,
-                  borderColor: '#f66747',
-                  width: '50%',
-                  alignSelf: 'center',
-                },
-              ]}>
-              START
-            </Text>
+            <View style={{borderRadius: 10, backgroundColor: '#dcbf54', marginBottom: '10%', width: '45%', alignSelf: 'center'}}>
+              <Text style={[styles.paragraph, {textAlign: 'center', paddingHorizontal: 30, paddingVertical: 10, color: '#0c0a2b', fontSize: 25}]} numberOfLines={1}>
+              Start
+              </Text>
+            </View>
           </TouchableOpacity>
         </ScrollView>
       </SafeAreaView>
@@ -1002,7 +976,7 @@ export default function App() {
     return (
       <SafeAreaView style={styles.container}>
         <Animated.Text
-          style={[styles.paragraph, { color: textcolor, fontSize: 240 }]}>
+          style={[styles.paragraph, { color: textcolor, fontSize: 180 }]}>
           {count}
         </Animated.Text>
       </SafeAreaView>
